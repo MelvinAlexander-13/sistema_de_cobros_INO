@@ -1,0 +1,877 @@
+/* =========================================================
+   Cobros INO — Gestión de pagos
+   Tema oscuro tipo dashboard, conservando el naranja de la marca.
+   Solo cambia el estilo: el HTML no necesita ningún cambio.
+   ========================================================= */
+
+:root {
+    /* Marca */
+    --accent: #FF7A1A;
+    --accent-light: #FFA25C;
+    --accent-dark: #E86C10;
+    --accent-soft: rgba(255, 122, 26, 0.12);
+    --accent-glow: rgba(255, 122, 26, 0.28);
+
+    /* Superficies */
+    --bg: #0F1218;
+    --sidebar-bg: #141821;
+    --surface: #171B25;
+    --surface-2: #1E2330;
+    --input-bg: #11151D;
+
+    /* Bordes y texto */
+    --border: #262C3A;
+    --border-strong: #343B4D;
+    --text: #E7EAF0;
+    --text-muted: #9AA3B5;
+    --text-faint: #6B7385;
+
+    /* Estados */
+    --danger: #FF6B6B;
+    --danger-soft: rgba(255, 107, 107, 0.12);
+    --danger-strong: #E64A19;
+    --success: #4ADE80;
+    --success-soft: rgba(74, 222, 128, 0.12);
+
+    --radius: 14px;
+    --radius-sm: 10px;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+    color-scheme: dark;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    color: var(--text);
+    background:
+        radial-gradient(900px 500px at 100% -10%, rgba(255, 122, 26, 0.10), transparent 60%),
+        radial-gradient(700px 400px at 20% 110%, rgba(255, 122, 26, 0.05), transparent 60%),
+        var(--bg);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 10px;
+    border: 2px solid var(--bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+    width: 250px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: 100vh;
+    overflow-y: auto;
+    background: linear-gradient(180deg, var(--sidebar-bg) 0%, #10131A 100%);
+    border-right: 1px solid var(--border);
+    color: var(--text);
+    padding: 26px 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar h2 {
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: var(--accent);
+    padding: 0 10px 22px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar a {
+    display: block;
+    color: var(--text-muted);
+    text-decoration: none;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 6px;
+    font-size: 15px;
+    font-weight: 500;
+    border: 1px solid transparent;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.sidebar a:hover {
+    background: var(--surface-2);
+    color: var(--text);
+    transform: translateX(3px);
+}
+
+.sidebar a.active {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 6px 18px var(--accent-glow);
+}
+
+.sidebar a.active:hover {
+    transform: none;
+}
+
+.sidebar .logout {
+    margin-top: auto;
+    background: var(--danger-soft);
+    color: var(--danger);
+    border: 1px solid rgba(255, 107, 107, 0.25);
+    text-align: center;
+    border-radius: var(--radius-sm);
+    padding: 11px;
+    font-weight: 600;
+}
+
+.sidebar .logout:hover {
+    background: var(--danger-strong);
+    border-color: var(--danger-strong);
+    color: #fff;
+    transform: none;
+}
+
+/* ---------- Contenido ---------- */
+.content {
+    flex: 1;
+    min-width: 0;
+    max-width: 1400px;
+    padding: 34px 44px 48px;
+}
+
+.content h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    margin-bottom: 6px;
+    /* Color sólido: un degradado en el texto convierte los emojis (📊) en un cuadro */
+    color: var(--accent);
+}
+
+.content p.subtitle {
+    color: var(--text-muted);
+    margin-bottom: 28px;
+    font-size: 15px;
+}
+
+.content p.subtitle strong {
+    color: var(--text);
+    font-weight: 600;
+}
+
+/* ---------- Tarjetas ---------- */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px;
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+}
+
+.card h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 18px;
+}
+
+.card h3::before {
+    content: "";
+    width: 4px;
+    height: 18px;
+    border-radius: 4px;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+    flex-shrink: 0;
+}
+
+/* ---------- Formulario ---------- */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px 16px;
+}
+
+.form-grid label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    display: block;
+}
+
+input,
+select {
+    color: var(--text);
+    background-color: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.form-grid input,
+.form-grid select {
+    width: 100%;
+    padding: 11px 12px;
+}
+
+input::placeholder {
+    color: var(--text-faint);
+}
+
+input:hover,
+select:hover {
+    border-color: var(--border-strong);
+}
+
+input:focus,
+select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+    background-color: #131823;
+}
+
+/* Flecha personalizada en los select */
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 36px !important;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23FF7A1A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+}
+
+select option {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(0.75);
+}
+
+.form-actions {
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ---------- Botones ---------- */
+.btn {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: #fff;
+    border: 1px solid transparent;
+    padding: 11px 22px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 4px 14px var(--accent-glow);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.btn:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px var(--accent-glow);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn:focus-visible,
+.sidebar a:focus-visible,
+.actions a:focus-visible {
+    outline: 2px solid var(--accent-light);
+    outline-offset: 2px;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-strong);
+    box-shadow: none;
+}
+
+.btn-secondary:hover {
+    background: var(--surface-2);
+    color: var(--text);
+    filter: none;
+    box-shadow: none;
+}
+
+/* ---------- Barras de búsqueda ---------- */
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    flex: 1;
+    min-width: 0;
+    padding: 11px 14px;
+}
+
+/* Resultados del buscador de estudiantes (los pinta pagos.js) */
+#resultadoBusqueda {
+    color: var(--text);
+}
+
+#resultadoBusqueda > div,
+#resultadoBusqueda li,
+#resultadoBusqueda .resultado-item {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    list-style: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+#resultadoBusqueda > div:hover,
+#resultadoBusqueda li:hover,
+#resultadoBusqueda .resultado-item:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+}
+
+#resultadoBusqueda button {
+    background: var(--accent-soft);
+    color: var(--accent-light);
+    border: 1px solid rgba(255, 122, 26, 0.3);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+#resultadoBusqueda button:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* El texto de sección trae color inline (#555): se sobrescribe para el tema oscuro */
+#seccionEstudianteTexto {
+    color: var(--accent-light) !important;
+}
+
+/* ---------- Tabla ---------- */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+th,
+td {
+    padding: 13px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+}
+
+th {
+    background: var(--surface-2);
+    color: var(--accent-light);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border-strong);
+}
+
+th:first-child {
+    border-top-left-radius: var(--radius-sm);
+}
+
+th:last-child {
+    border-top-right-radius: var(--radius-sm);
+}
+
+td {
+    color: var(--text);
+}
+
+tbody tr {
+    transition: background 0.15s ease;
+}
+
+tbody tr:hover {
+    background: rgba(255, 122, 26, 0.06);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Tabla de Pagos (la que va justo después de la barra "Buscar pagos").
+   Se limita a ella para no afectar la tabla de Reportes. */
+.search-bar + table td:nth-child(1),
+.search-bar + table td:nth-child(4) {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Monto */
+.search-bar + table td:nth-child(4) {
+    font-weight: 600;
+    color: var(--success);
+}
+
+/* Comprobante */
+.search-bar + table td:nth-child(7) {
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Alertas ---------- */
+.alert {
+    padding: 13px 18px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid transparent;
+    border-left-width: 4px;
+}
+
+.alert-error {
+    background: var(--danger-soft);
+    color: #FF9C9C;
+    border-color: rgba(255, 107, 107, 0.25);
+    border-left-color: var(--danger);
+}
+
+.alert-success {
+    background: var(--success-soft);
+    color: #86EFAC;
+    border-color: rgba(74, 222, 128, 0.25);
+    border-left-color: var(--success);
+}
+
+/* ---------- Acciones de la tabla ---------- */
+.actions {
+    white-space: nowrap;
+}
+
+.actions a {
+    display: inline-block;
+    margin-right: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.actions a:last-child {
+    margin-right: 0;
+}
+
+.actions .edit {
+    color: var(--accent-light);
+    background: var(--accent-soft);
+}
+
+.actions .edit:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+.actions .delete {
+    color: var(--danger);
+    background: var(--danger-soft);
+}
+
+.actions .delete:hover {
+    background: var(--danger-strong);
+    color: #fff;
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+@media (max-width: 1100px) {
+    .content {
+        padding: 28px 28px 40px;
+    }
+
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 860px) {
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        padding: 14px 16px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar h2 {
+        width: 100%;
+        padding: 0 4px 12px;
+        margin-bottom: 6px;
+    }
+
+    .sidebar a {
+        margin-bottom: 0;
+        padding: 9px 12px;
+        font-size: 14px;
+    }
+
+    .sidebar .logout {
+        margin-top: 0;
+        margin-left: auto;
+    }
+
+    .content {
+        padding: 24px 18px 36px;
+    }
+
+    .content h1 {
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        padding: 20px 16px;
+    }
+
+    .search-bar {
+        flex-direction: column;
+    }
+
+    .btn {
+        text-align: center;
+    }
+
+    .form-actions .btn {
+        flex: 1;
+    }
+
+    /* La tabla se desplaza horizontalmente en pantallas pequeñas */
+    .card table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* =========================================================
+   REPORTES  (la página de Reportes también usa este archivo)
+   Todo va con #reporteContenedor / #opcionesMultiples para que
+   no afecte a la página de Pagos, y para ganarle al <style>
+   con colores claros que trae el HTML de Reportes.
+   ========================================================= */
+
+/* ---------- Datos del estudiante dentro de la tarjeta ---------- */
+#reporteContenedor .card > p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+#reporteContenedor .card > p strong {
+    color: var(--text);
+    font-weight: 600;
+}
+
+#reporteContenedor .card > h3 + p + p {
+    margin-bottom: 18px;
+}
+
+/* ---------- Tabla del reporte (con líneas de cuadrícula) ---------- */
+#reporteContenedor table {
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#reporteContenedor th,
+#reporteContenedor td {
+    border-right: 1px solid var(--border);
+}
+
+#reporteContenedor th:last-child,
+#reporteContenedor td:last-child {
+    border-right: none;
+}
+
+#reporteContenedor td {
+    font-weight: 400;
+}
+
+#reporteContenedor td:nth-child(1) {
+    font-weight: 600;
+}
+
+#reporteContenedor td:nth-child(3),
+#reporteContenedor td:nth-child(4) {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Filas pagadas: ligero tono verde */
+#reporteContenedor tr.fila-pagado {
+    background: rgba(74, 222, 128, 0.05);
+}
+
+/* Fecha en verde cuando ya se pagó */
+#reporteContenedor tr.fila-pagado td:nth-child(4) {
+    color: var(--success);
+    font-weight: 600;
+}
+
+/* Icono de documento antes del comprobante */
+#reporteContenedor tr.fila-pagado td:nth-child(6)::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 16px;
+    margin-right: 8px;
+    vertical-align: -3px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='16' viewBox='0 0 14 16'><path d='M2 1h6l4 4v10H2z' fill='none' stroke='%239AA3B5' stroke-width='1.4' stroke-linejoin='round'/><path d='M8 1v4h4' fill='none' stroke='%239AA3B5' stroke-width='1.4'/></svg>") no-repeat center / contain;
+}
+
+/* Filas pendientes: apagadas */
+#reporteContenedor tr.fila-pendiente {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+#reporteContenedor tr.fila-pendiente td {
+    color: var(--text-muted);
+}
+
+#reporteContenedor tr.fila-pendiente td:nth-child(n+2) {
+    color: var(--text-faint);
+}
+
+#reporteContenedor tr.fila-pagado:hover,
+#reporteContenedor tr.fila-pendiente:hover {
+    background: rgba(255, 122, 26, 0.10);
+}
+
+/* Correo enviado: Sí / No */
+#reporteContenedor .badge-si {
+    color: var(--success);
+    font-weight: 700;
+}
+
+#reporteContenedor .badge-no {
+    color: var(--danger);
+    font-weight: 700;
+}
+
+/* ---------- Botones Imprimir / Enviar ---------- */
+#reporteContenedor .form-actions .btn:first-child {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border-strong);
+    box-shadow: none;
+}
+
+#reporteContenedor .form-actions .btn:first-child:hover {
+    background: var(--surface-2);
+    border-color: var(--accent);
+    color: var(--accent-light);
+    filter: none;
+}
+
+/* Mensaje de "Enviando... / Correo enviado" (JS le pone colores oscuros inline) */
+#mensajeEnvio[style*="1E7E34" i],
+#mensajeEnvio[style*="rgb(30, 126, 52)"] {
+    color: #86EFAC !important;
+}
+
+#mensajeEnvio[style*="C0392B" i],
+#mensajeEnvio[style*="rgb(192, 57, 43)"] {
+    color: #FF9C9C !important;
+}
+
+/* "No se encontró ningún estudiante" */
+#reporteContenedor > p {
+    color: #FF9C9C !important;
+    background: var(--danger-soft);
+    border: 1px solid rgba(255, 107, 107, 0.25);
+    border-left: 4px solid var(--danger);
+    border-radius: var(--radius-sm);
+    padding: 13px 18px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ---------- Varios resultados: "elige uno" ---------- */
+#opcionesMultiples p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+#opcionesMultiples li {
+    background: var(--input-bg);
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px !important;
+    margin-bottom: 8px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+#opcionesMultiples li:hover {
+    border-color: var(--accent) !important;
+    background: var(--accent-soft);
+}
+
+@media (max-width: 600px) {
+    #reporteContenedor table {
+        overflow-x: auto;
+    }
+}
+
+/* =========================================================
+   IMPRESIÓN — el reporte se imprime en blanco, sin fondo oscuro
+   ========================================================= */
+@media print {
+    :root {
+        color-scheme: light;
+    }
+
+    body {
+        background: #fff !important;
+        color: #000;
+    }
+
+    .content h1,
+    .card h3,
+    #reporteContenedor .card > p,
+    #reporteContenedor .card > p strong {
+        color: #000;
+    }
+
+    .content p.subtitle {
+        color: #444;
+    }
+
+    .card {
+        background: #fff;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+    }
+
+    .card h3::before {
+        display: none;
+    }
+
+    #reporteContenedor table {
+        border-color: #999;
+    }
+
+    #reporteContenedor th {
+        background: #eee;
+        color: #000;
+        border-color: #999;
+    }
+
+    #reporteContenedor td {
+        color: #000;
+        border-color: #ccc;
+    }
+
+    #reporteContenedor tr.fila-pagado,
+    #reporteContenedor tr.fila-pendiente {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    #reporteContenedor tr.fila-pagado {
+        background: #F3FBF5;
+    }
+
+    #reporteContenedor tr.fila-pendiente {
+        background: #FDF3F2;
+    }
+
+    #reporteContenedor tr.fila-pendiente td,
+    #reporteContenedor tr.fila-pendiente td:nth-child(n+2) {
+        color: #555;
+    }
+
+    #reporteContenedor tr.fila-pagado td:nth-child(4),
+    #reporteContenedor .badge-si {
+        color: #1E7E34;
+    }
+
+    #reporteContenedor .badge-no {
+        color: #C0392B;
+    }
+}

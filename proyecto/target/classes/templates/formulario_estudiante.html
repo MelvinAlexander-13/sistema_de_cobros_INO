@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudiante | Cobros INO</title>
+    <link rel="stylesheet" th:href="@{/estudiantes.css}">
+    <script th:src="@{/atajos.js}"></script>
+</head>
+<body>
+
+<div class="form-contenedor">
+    <div class="form-card">
+
+        <h1 th:if="${estudiante.id_estudiante == null}">➕ Nuevo estudiante</h1>
+        <h1 th:unless="${estudiante.id_estudiante == null}">✏️ Editar estudiante</h1>
+
+        <p>Complete la información del estudiante</p>
+
+        <form th:action="${estudiante.id_estudiante == null} ? @{/estudiantes/guardar} : @{/estudiantes/actualizar}" method="post">
+
+            <input type="hidden" name="id_estudiante" th:value="${estudiante.id_estudiante}">
+
+            <label>NIE</label>
+            <input type="number" name="nie" th:value="${estudiante.nie}" required>
+
+            <label>Nombres</label>
+            <input type="text" name="nombres" th:value="${estudiante.nombres}" required>
+
+            <label>Apellidos</label>
+            <input type="text" name="apellidos" th:value="${estudiante.apellidos}" required>
+
+            <label>Grado</label>
+            <input type="text" name="grado" th:value="${estudiante.grado}" placeholder="Ej. 3° Desarrollo de Software">
+
+            <label>Sección</label>
+            <input type="text" name="seccion" th:value="${estudiante.seccion}" placeholder="Ej. A">
+
+            <label>Correo (padre/tutor o estudiante)</label>
+            <input type="email" name="correo" th:value="${estudiante.correo}" placeholder="correo@ejemplo.com">
+
+            <label>Estado</label>
+            <select name="activo">
+                <option value="true" th:selected="${estudiante.activo == true}">Activo</option>
+                <option value="false" th:selected="${estudiante.activo == false}">Inactivo</option>
+            </select>
+
+            <div class="botones">
+                <button type="submit" class="guardar">💾 Guardar</button>
+                <a th:href="@{/estudiantes}" class="cancelar">Cancelar</a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Pagos | Cobros INO</title>
+    <link rel="stylesheet" th:href="@{/pagos.css}">
+    <script th:src="@{/atajos.js}"></script>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>⚡ Cobros INO</h2>
+        <a th:href="@{/usuarios/dashboard}">🏠 Dashboard</a>
+        <a th:href="@{/estudiantes}">🎓 Estudiantes</a>
+        <a th:href="@{/pagos}" class="active">💳 Pagos</a>
+        <a th:href="@{/reportes}">📊 Reportes</a>
+        <a th:if="${usuario != null and usuario.rol != null and usuario.rol.equalsIgnoreCase('admin')}"
+           th:href="@{/usuarios/panel-admin}">👑 Administración de Usuarios</a>
+        <a th:href="@{/usuarios/logout}" class="logout">🚪 Cerrar sesión</a>
+    </div>
+
+    <div class="content">
+        <h1>Gestión de pagos</h1>
+        <p class="subtitle" th:if="${usuario != null}">
+            Bienvenido <strong th:text="${usuario.username}"></strong> — Registra y consulta los pagos de mensualidades.
+        </p>
+
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+        <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+
+        <div class="card">
+            <h3>🔎 Buscar estudiante (NIE o Nombre)</h3>
+            <div class="search-bar">
+                <input type="text" id="buscarEstudianteInput" placeholder="Escribe el NIE o el nombre del estudiante...">
+                <button type="button" class="btn" onclick="buscarEstudiante()">Buscar</button>
+            </div>
+            <div id="resultadoBusqueda" style="margin-top:10px;"></div>
+            <p id="seccionEstudianteTexto" style="margin-top:8px; color:#555; font-weight:600;"></p>
+        </div>
+
+        <div class="card">
+            <h3 th:text="${pago.id_pago == null ? 'Registrar nuevo pago' : 'Editar pago'}"></h3>
+            <form th:action="${pago.id_pago == null} ? @{/pagos/guardar} : @{/pagos/actualizar}"
+                  th:object="${pago}" method="post">
+
+                <input type="hidden" th:field="*{id_pago}" />
+
+                <div class="form-grid">
+                    <div>
+                        <label>NIE del estudiante</label>
+                        <input type="number" id="nie" th:field="*{nie}" required />
+                    </div>
+                    <div>
+                        <label>Nombre del estudiante</label>
+                        <input type="text" id="estudiante" th:field="*{estudiante}" required />
+                    </div>
+                    <div>
+                        <label>Mes</label>
+                        <select th:field="*{mes}" required>
+                            <option value="">-- Selecciona --</option>
+                            
+                            <option value="Febrero">Febrero</option>
+                            <option value="Marzo">Marzo</option>
+                            <option value="Abril">Abril</option>
+                            <option value="Mayo">Mayo</option>
+                            <option value="Junio">Junio</option>
+                            <option value="Julio">Julio</option>
+                            <option value="Agosto">Agosto</option>
+                            <option value="Septiembre">Septiembre</option>
+                            <option value="Octubre">Octubre</option>
+                            <option value="Noviembre">Noviembre</option>
+                            
+                        </select>
+                    </div>
+                    <div>
+                        <label>Monto ($)</label>
+                        <input type="number" step="0.01" th:field="*{monto}" required />
+                    </div>
+                    <div>
+                        <label>Fecha de pago</label>
+                        <input type="date" th:field="*{fecha_pago}" required />
+                    </div>
+                    <div>
+                        <label>Estado</label>
+                        <select th:field="*{estado}" required>
+                            <option value="Pagado">Pagado</option>
+                            <option value="Pendiente">Pendiente</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Método de pago</label>
+                        <select id="metodoPago" th:field="*{metodo_pago}" required>
+                            <option value="">-- Selecciona --</option>
+                            <option value="efectivo">Efectivo</option>
+                            <option value="transferencia">Transferencia</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn"
+                            th:text="${pago.id_pago == null ? 'Guardar pago' : 'Actualizar pago'}"></button>
+                    <a th:href="@{/pagos}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>Buscar pagos</h3>
+            <form class="search-bar" th:action="@{/pagos/buscar}" method="get">
+                <input type="text" name="nie" placeholder="Buscar por NIE..." />
+                <button type="submit" class="btn">Buscar</button>
+                <a th:href="@{/pagos}" class="btn btn-secondary">Ver todos</a>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>NIE</th>
+                        <th>Estudiante</th>
+                        <th>Mes</th>
+                        <th>Monto</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Comprobante</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p : ${listaPagos}">
+                        <td th:text="${p.nie}"></td>
+                        <td th:text="${p.estudiante}"></td>
+                        <td th:text="${p.mes}"></td>
+                        <td th:text="${'$' + p.monto}"></td>
+                        <td th:text="${p.fecha_pago}"></td>
+                        <td th:text="${p.estado}"></td>
+                        <td th:text="${p.numeroComprobante != null ? p.numeroComprobante : '—'}"></td>
+                        <td class="actions">
+                            <a th:href="@{/pagos/editar/{id}(id=${p.id_pago})}" class="edit">Editar</a>
+                            <a th:href="@{/pagos/eliminar/{id}(id=${p.id_pago})}" class="delete"
+                               onclick="return confirm('¿Eliminar este pago?');">Eliminar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script th:src="@{/pagos.js}"></script>
+
+</body>
+</html>

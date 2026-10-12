@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Login | Cobros INO</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/login.css}">
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="login-box">
+
+            <div class="logo">
+                🔐
+            </div>
+
+            <h2>Bienvenido</h2>
+
+            <p class="subtitle">
+                Sistema de Cobros INO
+            </p>
+
+            <form th:action="@{/usuarios/login}" method="post">
+
+                <div class="input-group">
+
+                    <label>Usuario</label>
+
+                    <input type="text"
+                           name="username"
+                           placeholder="Ingresa tu usuario"
+                           required>
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>Contraseña</label>
+
+                    <input type="password"
+                           name="password"
+                           placeholder="Ingresa tu contraseña"
+                           required>
+
+                </div>
+
+                <button type="submit" class="login-btn">
+                    Ingresar al sistema
+                </button>
+
+            </form>
+
+            <div class="error"
+                 th:if="${error}"
+                 th:text="${error}">
+            </div>
+
+            <div class="success"
+                 th:if="${mensaje}"
+                 th:text="${mensaje}">
+            </div>
+
+            <div class="footer">
+                © 2026 Cobros INO
+            </div>
+
+        </div>
+
+    </div>
+ 
+</body>
+
+</html>

@@ -1,0 +1,629 @@
+/* =========================================================
+   Cobros INO — Estudiantes
+   Mismo tema oscuro con acento naranja que pagos.css.
+   Solo cambia el estilo: el HTML no necesita ningún cambio.
+   ========================================================= */
+
+:root {
+    /* Marca */
+    --accent: #FF7A1A;
+    --accent-light: #FFA25C;
+    --accent-dark: #E86C10;
+    --accent-soft: rgba(255, 122, 26, 0.12);
+    --accent-glow: rgba(255, 122, 26, 0.28);
+
+    /* Superficies */
+    --bg: #0F1218;
+    --surface: #171B25;
+    --surface-2: #1E2330;
+    --input-bg: #11151D;
+
+    /* Bordes y texto */
+    --border: #262C3A;
+    --border-strong: #343B4D;
+    --text: #E7EAF0;
+    --text-muted: #9AA3B5;
+    --text-faint: #6B7385;
+
+    /* Estados */
+    --danger: #FF6B6B;
+    --danger-soft: rgba(255, 107, 107, 0.12);
+    --danger-strong: #E64A19;
+    --success: #4ADE80;
+    --success-soft: rgba(74, 222, 128, 0.12);
+    --info: #5FA8FF;
+    --info-soft: rgba(95, 168, 255, 0.12);
+
+    --radius: 14px;
+    --radius-sm: 10px;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+    color-scheme: dark;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    color: var(--text);
+    background:
+        radial-gradient(900px 500px at 100% -10%, rgba(255, 122, 26, 0.10), transparent 60%),
+        radial-gradient(700px 400px at 0% 110%, rgba(255, 122, 26, 0.05), transparent 60%),
+        var(--bg);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 10px;
+    border: 2px solid var(--bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* ---------- Contenedor ---------- */
+.contenedor {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 32px 28px 48px;
+}
+
+/* ---------- Encabezado ---------- */
+.encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 26px 30px;
+    margin-bottom: 20px;
+}
+
+.encabezado h1 {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.encabezado p {
+    color: var(--text-muted);
+    font-size: 15px;
+}
+
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-soft);
+    color: var(--accent-light);
+    border: 1px solid rgba(255, 122, 26, 0.3);
+    padding: 11px 20px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-volver:hover {
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+/* ---------- Mensajes (traen estilo inline en el HTML, por eso !important) ---------- */
+.contenedor > div[style] {
+    background: var(--surface-2) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border-strong) !important;
+    border-left-width: 4px !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 13px 18px !important;
+    margin-bottom: 20px !important;
+    font-size: 14px;
+    font-weight: 500 !important;
+}
+
+.contenedor > div[style*="EAF9EF" i] {
+    background: var(--success-soft) !important;
+    color: #86EFAC !important;
+    border-color: rgba(74, 222, 128, 0.25) !important;
+    border-left-color: var(--success) !important;
+}
+
+.contenedor > div[style*="FDEAEA" i] {
+    background: var(--danger-soft) !important;
+    color: #FF9C9C !important;
+    border-color: rgba(255, 107, 107, 0.25) !important;
+    border-left-color: var(--danger) !important;
+}
+
+/* ---------- Barra de búsqueda y acciones ---------- */
+.acciones {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+}
+
+.acciones form {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+    min-width: 0;
+}
+
+.acciones input {
+    flex: 1;
+    min-width: 0;
+    padding: 11px 14px;
+    color: var(--text);
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.acciones input::placeholder {
+    color: var(--text-faint);
+}
+
+.acciones input:hover {
+    border-color: var(--border-strong);
+}
+
+.acciones input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* Buscar: secundario */
+.acciones button {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    padding: 11px 20px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.acciones button:hover {
+    background: var(--surface-2);
+    border-color: var(--accent);
+    color: var(--accent-light);
+}
+
+/* Nuevo estudiante: principal */
+.btn-nuevo {
+    display: inline-block;
+    white-space: nowrap;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: #fff;
+    text-decoration: none;
+    padding: 11px 22px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 14px var(--accent-glow);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.btn-nuevo:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px var(--accent-glow);
+}
+
+.btn-nuevo:active {
+    transform: translateY(0);
+}
+
+/* ---------- Tabla ---------- */
+.tabla-contenedor {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 780px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+th,
+td {
+    padding: 14px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+th {
+    background: var(--surface-2);
+    color: var(--accent-light);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border-strong);
+}
+
+th:first-child {
+    border-top-left-radius: var(--radius-sm);
+}
+
+th:last-child {
+    border-top-right-radius: var(--radius-sm);
+}
+
+td {
+    color: var(--text);
+}
+
+/* ID */
+td:first-child {
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+
+tbody tr {
+    transition: background 0.15s ease;
+}
+
+tbody tr:hover {
+    background: rgba(255, 122, 26, 0.06);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.sin-datos {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 40px 14px;
+    font-size: 15px;
+}
+
+/* ---------- Estado ---------- */
+.estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.estado::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.estado.activo {
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+.estado.inactivo {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+/* ---------- Iconos de acciones ---------- */
+.acciones-tabla {
+    white-space: nowrap;
+}
+
+.acciones-tabla a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin-right: 6px;
+    border-radius: 9px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    font-size: 16px;
+    line-height: 1;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.acciones-tabla a:last-child {
+    margin-right: 0;
+}
+
+.acciones-tabla a:hover {
+    transform: translateY(-2px);
+}
+
+.acciones-tabla .editar {
+    background: var(--accent-soft);
+}
+
+.acciones-tabla .editar:hover {
+    border-color: var(--accent);
+}
+
+.acciones-tabla .estado-btn {
+    background: var(--info-soft);
+}
+
+.acciones-tabla .estado-btn:hover {
+    border-color: var(--info);
+}
+
+.acciones-tabla .eliminar {
+    background: var(--danger-soft);
+}
+
+.acciones-tabla .eliminar:hover {
+    border-color: var(--danger);
+}
+
+/* ---------- Foco visible (teclado) ---------- */
+.btn-volver:focus-visible,
+.btn-nuevo:focus-visible,
+.acciones button:focus-visible,
+.acciones-tabla a:focus-visible {
+    outline: 2px solid var(--accent-light);
+    outline-offset: 2px;
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+@media (max-width: 800px) {
+    .contenedor {
+        padding: 20px 16px 36px;
+    }
+
+    .encabezado {
+        padding: 20px;
+    }
+
+    .encabezado h1 {
+        font-size: 25px;
+    }
+
+    .acciones {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-nuevo {
+        text-align: center;
+    }
+
+    .tabla-contenedor {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .acciones form {
+        flex-direction: column;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* =========================================================
+   FORMULARIO — Nuevo / Editar estudiante
+   Esta plantilla también usa estudiantes.css, pero con sus
+   propias clases (.form-contenedor, .form-card, .botones...).
+   ========================================================= */
+
+.form-contenedor {
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px 20px;
+}
+
+.form-card {
+    width: 100%;
+    max-width: 560px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 34px 36px 30px;
+}
+
+.form-card h1 {
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+.form-card > p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 26px;
+}
+
+.form-card form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-card label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    margin-top: 16px;
+}
+
+.form-card label:first-of-type {
+    margin-top: 0;
+}
+
+.form-card input,
+.form-card select {
+    width: 100%;
+    padding: 11px 12px;
+    color: var(--text);
+    background-color: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.form-card input::placeholder {
+    color: var(--text-faint);
+}
+
+.form-card input:hover,
+.form-card select:hover {
+    border-color: var(--border-strong);
+}
+
+.form-card input:focus,
+.form-card select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+    background-color: #131823;
+}
+
+.form-card select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 36px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23FF7A1A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+}
+
+.form-card select option {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+.form-card .botones {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.form-card .guardar {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    color: #fff;
+    border: none;
+    padding: 11px 24px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 14px var(--accent-glow);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.form-card .guardar:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px var(--accent-glow);
+}
+
+.form-card .guardar:active {
+    transform: translateY(0);
+}
+
+.form-card .cancelar {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.form-card .cancelar:hover {
+    color: var(--text);
+    text-decoration: underline;
+}
+
+.form-card .guardar:focus-visible,
+.form-card .cancelar:focus-visible {
+    outline: 2px solid var(--accent-light);
+    outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+    .form-contenedor {
+        padding: 24px 14px;
+    }
+
+    .form-card {
+        padding: 26px 20px 24px;
+    }
+}

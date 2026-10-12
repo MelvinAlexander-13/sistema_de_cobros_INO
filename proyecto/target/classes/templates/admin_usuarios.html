@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Administración de Usuarios</title>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          th:href="@{/admin_usuarios.css}">
+
+</head>
+
+<body>
+
+<h1>👑 Administración de Usuarios</h1>
+
+<!-- BOTON DASHBOARD -->
+
+<div class="top-actions">
+
+    <a th:href="@{/usuarios/dashboard}"
+       class="btn-dashboard">
+
+        🏠 Volver al Dashboard
+
+    </a>
+
+</div>
+
+<div th:if="${error}" class="error">
+
+    <span th:text="${error}"></span>
+
+</div>
+
+<!-- FORMULARIO -->
+
+<div class="card">
+
+    <h2 th:text="${usuarioObj != null and usuarioObj.id != null ?
+    'Editar Usuario' : 'Crear Usuario'}"></h2>
+
+    <form th:action="${usuarioObj != null and usuarioObj.id != null}
+          ? @{/usuarios/admin/actualizar}
+          : @{/usuarios/admin/crear}"
+          method="post">
+
+        <input type="hidden"
+               name="id"
+               th:value="${usuarioObj != null ? usuarioObj.id : ''}">
+
+        <div class="form-grid">
+
+            <input type="text"
+                   name="username"
+                   placeholder="Usuario"
+                   th:value="${usuarioObj != null ? usuarioObj.username : ''}"
+                   required>
+
+            <input type="password"
+                   name="password"
+                   placeholder="Contraseña">
+
+            <input type="password"
+                   name="confirmarPassword"
+                   placeholder="Confirmar contraseña">
+
+            <select name="rol">
+
+                <option value="admin"
+                        th:selected="${usuarioObj != null and usuarioObj.rol == 'admin'}">
+                    admin
+                </option>
+
+                <option value="cajero"
+                        th:selected="${usuarioObj != null and usuarioObj.rol == 'cajero'}">
+                    cajero
+                </option>
+
+                <option value="director"
+                        th:selected="${usuarioObj != null and usuarioObj.rol == 'director'}">
+                    director
+                </option>
+
+                <option value="docente"
+                        th:selected="${usuarioObj != null and usuarioObj.rol == 'docente'}">
+                    docente
+                </option>
+
+                <option value="CDE"
+                        th:selected="${usuarioObj != null and usuarioObj.rol == 'CDE'}">
+                    CDE
+                </option>
+
+            </select>
+
+            <select name="activo">
+
+                <option value="true"
+                        th:selected="${usuarioObj == null or usuarioObj.activo}">
+                    Activo
+                </option>
+
+                <option value="false"
+                        th:selected="${usuarioObj != null and !usuarioObj.activo}">
+                    Inactivo
+                </option>
+
+            </select>
+
+            <input type="password"
+                   name="passwordAdmin"
+                   placeholder="Contraseña del administrador"
+                   required>
+
+        </div>
+
+        <button type="submit"
+                class="btn btn-save">
+
+            💾 Guardar Usuario
+
+        </button>
+
+    </form>
+
+</div>
+
+<!-- TABLA -->
+
+<div class="card">
+
+    <h2>Usuarios Registrados</h2>
+
+    <div class="table-responsive">
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            <tr th:each="u : ${usuarios}">
+
+                <td th:text="${u.id}"></td>
+
+                <td th:text="${u.username}"></td>
+
+                <td th:text="${u.rol}"></td>
+
+                <td th:text="${u.activo ? 'Activo' : 'Inactivo'}"></td>
+
+                <td>
+
+                    <div class="actions">
+
+                        <a th:href="@{/usuarios/admin/editar/{id}(id=${u.id})}">
+
+                            <button type="button"
+                                    class="edit">
+
+                                ✏️
+
+                            </button>
+
+                        </a>
+
+                        <a th:href="@{/usuarios/admin/eliminar/{id}(id=${u.id},passwordAdmin='admin')}">
+
+                            <button type="button"
+                                    class="delete">
+
+                                🗑️
+
+                            </button>
+
+                        </a>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

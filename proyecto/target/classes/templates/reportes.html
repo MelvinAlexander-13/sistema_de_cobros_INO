@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reportes | Cobros INO</title>
+    <link rel="stylesheet" th:href="@{/pagos.css}">
+    <script th:src="@{/atajos.js}"></script>
+    <style>
+        .badge-si { color: #1E7E34; font-weight: 700; }
+        .badge-no { color: #C0392B; font-weight: 700; }
+        .fila-pagado { background: #F3FBF5; }
+        .fila-pendiente { background: #FDF3F2; }
+        .total-adeudado { background:#C0392B; color:white; padding:14px 18px; border-radius:10px; font-weight:700; font-size:16px; margin-top:10px; }
+        .total-pagado { background:#1E7E34; color:white; padding:14px 18px; border-radius:10px; font-weight:700; font-size:16px; margin-top:10px; }
+        @media print {
+            .sidebar, .no-print { display: none !important; }
+            .content { padding: 0 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar no-print">
+        <h2>⚡ Cobros INO</h2>
+        <a th:href="@{/usuarios/dashboard}">🏠 Dashboard</a>
+        <a th:href="@{/estudiantes}">🎓 Estudiantes</a>
+        <a th:href="@{/pagos}">💳 Pagos</a>
+        <a th:href="@{/reportes}" class="active">📊 Reportes</a>
+        <a th:href="@{/usuarios/logout}" class="logout">🚪 Cerrar sesión</a>
+    </div>
+
+    <div class="content">
+        <h1>📊 Reporte de estudiante</h1>
+        <p class="subtitle">Busca por NIE o nombre y selecciona el año para ver el historial de pagos.</p>
+
+        <div class="card no-print">
+            <div class="form-grid">
+                <div>
+                    <label>NIE o Nombre del estudiante</label>
+                    <input type="text" id="buscarInput" placeholder="Escribe el NIE o nombre...">
+                </div>
+                <div>
+                    <label>Año</label>
+                    <input type="number" id="anioInput" th:value="${anioActual}">
+                </div>
+                <div style="display:flex; align-items:flex-end;">
+                    <button type="button" class="btn" onclick="buscarReporte()">Buscar</button>
+                </div>
+            </div>
+            <div id="opcionesMultiples" style="margin-top:10px;"></div>
+        </div>
+
+        <div id="reporteContenedor"></div>
+    </div>
+
+<script th:inline="javascript">
+    function buscarReporte() {
+        const q = document.getElementById('buscarInput').value.trim();
+        const anio = document.getElementById('anioInput').value;
+        const opcionesDiv = document.getElementById('opcionesMultiples');
+        const contenedor = document.getElementById('reporteContenedor');
+
+        opcionesDiv.innerHTML = '';
+        contenedor.innerHTML = '';
+
+        if (q === '' || anio === '') {
+            return;
+        }
+
+        fetch('/reportes/buscar?q=' + encodeURIComponent(q) + '&anio=' + encodeURIComponent(anio))
+            .then(res => res.json())
+            .then(data => {
+                if (data.tipo === 'encontrado') {
+                    renderReporte(data);
+                } else if (data.tipo === 'multiple') {
+                    let html = '<p>Varios resultados, elige uno:</p><ul style="list-style:none; padding:0;">';
+                    data.opciones.forEach(function (op) {
+                        html += '<li style="padding:6px 0; border-bottom:1px solid #eee; cursor:pointer;" '
+                            + 'onclick="seleccionarNie(' + op.nie + ')">📌 ' + op.nombreCompleto + ' — NIE: ' + op.nie + '</li>';
+                    });
+                    html += '</ul>';
+                    opcionesDiv.innerHTML = html;
+                } else {
+                    contenedor.innerHTML = '<p style="color:#C0392B;">⚠️ No se encontró ningún estudiante.</p>';
+                }
+            });
+    }
+
+    function seleccionarNie(nie) {
+        document.getElementById('buscarInput').value = nie;
+        document.getElementById('opcionesMultiples').innerHTML = '';
+        buscarReporte();
+    }
+
+    function renderReporte(data) {
+        const contenedor = document.getElementById('reporteContenedor');
+
+        let filas = '';
+        data.meses.forEach(function (m) {
+            if (m.pagado) {
+                filas += '<tr class="fila-pagado">'
+                    + '<td>' + m.mes + '</td>'
+                    + '<td>Pagado</td>'
+                    + '<td>$' + m.monto + '</td>'
+                    + '<td>' + m.fecha + '</td>'
+                    + '<td>' + (m.metodoPago || '-') + '</td>'
+                    + '<td>' + (m.numeroComprobante || '-') + '</td>'
+                    + '<td>' + (m.correoEnviado ? '<span class="badge-si">Sí</span>' : '<span class="badge-no">No</span>') + '</td>'
+                    + '</tr>';
+            } else {
+                const montoAdeudado = m.montoAdeudado != null ? '$' + m.montoAdeudado : '--';
+                filas += '<tr class="fila-pendiente">'
+                    + '<td>' + m.mes + '</td>'
+                    + '<td>Pendiente</td>'
+                    + '<td>' + montoAdeudado + '</td>'
+                    + '<td>—</td><td>—</td><td>—</td><td>—</td>'
+                    + '</tr>';
+            }
+        });
+
+        contenedor.innerHTML =
+            '<div class="card">'
+            + '<h3>' + data.nombreCompleto + ' — NIE: ' + data.nie + '</h3>'
+            + '<p>Sección: ' + (data.seccion || 'N/D') + ' | Grado: ' + (data.grado || 'N/D')
+            + ' | Estado: ' + (data.activo ? 'Activo' : 'Inactivo') + '</p>'
+            + '<p><strong>Meses pagados:</strong> ' + data.mesesPagados
+            + ' | <strong>Meses pendientes:</strong> ' + data.mesesPendientes + '</p>'
+            + '<table><thead><tr><th>Mes</th><th>Estado</th><th>Monto</th><th>Fecha</th><th>Método</th><th>Comprobante</th><th>Correo enviado</th></tr></thead>'
+            + '<tbody>' + filas + '</tbody></table>'
+            + '<div class="total-pagado">💰 Total pagado en ' + data.anio + ': $' + data.totalPagado + '</div>'
+            + '<div class="total-adeudado">⚠️ Total adeudado: $' + data.totalAdeudado + '</div>'
+            + '<div class="form-actions no-print" style="margin-top:16px;">'
+            + '<button type="button" class="btn" onclick="window.print()">🖨️ Imprimir</button> '
+            + '<button type="button" class="btn" onclick="enviarPorCorreo(' + data.nie + ', ' + data.anio + ')">📧 Enviar por correo</button>'
+            + '</div>'
+            + '<p id="mensajeEnvio" style="margin-top:10px; font-weight:600;"></p>'
+            + '</div>';
+    }
+
+    function enviarPorCorreo(nie, anio) {
+        const mensajeEl = document.getElementById('mensajeEnvio');
+        mensajeEl.textContent = 'Enviando...';
+
+        fetch('/reportes/enviar-correo?nie=' + nie + '&anio=' + anio, { method: 'POST' })
+            .then(res => res.json())
+            .then(data => {
+                mensajeEl.textContent = data.mensaje;
+                mensajeEl.style.color = data.exito ? '#1E7E34' : '#C0392B';
+            });
+    }
+</script>
+
+</body>
+</html>

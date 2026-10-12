@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <title>Editar Usuario</title>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          th:href="@{/editar_usuario.css}">
+
+</head>
+
+<body>
+
+<div class="card">
+
+    <h1>✏️ Editar Usuario</h1>
+
+    <div th:if="${error}" class="error">
+        <span th:text="${error}"></span>
+    </div>
+
+    <form id="formEditar"
+          th:action="@{/usuarios/admin/actualizar}"
+          method="post">
+
+        <input type="hidden"
+               name="id"
+               th:value="${usuarioEditar.id}">
+
+        <input type="text"
+               id="username"
+               name="username"
+               th:value="${usuarioEditar.username}"
+               placeholder="Usuario"
+               required>
+
+        <input type="password"
+               id="password"
+               name="password"
+               placeholder="Nueva contraseña">
+
+        <input type="password"
+               id="confirmar"
+               name="confirmarPassword"
+               placeholder="Confirmar contraseña">
+
+        <select name="rol">
+
+            <option value="admin"
+                    th:selected="${usuarioEditar.rol == 'admin'}">
+                admin
+            </option>
+
+            <option value="cajero"
+                    th:selected="${usuarioEditar.rol == 'cajero'}">
+                cajero
+            </option>
+
+            <option value="director"
+                    th:selected="${usuarioEditar.rol == 'director'}">
+                director
+            </option>
+
+            <option value="docente"
+                    th:selected="${usuarioEditar.rol == 'docente'}">
+                docente
+            </option>
+
+            <option value="CDE"
+                    th:selected="${usuarioEditar.rol == 'CDE'}">
+                CDE
+            </option>
+
+        </select>
+
+        <button type="button"
+                class="btn"
+                onclick="confirmarEdicion()">
+
+            💾 Guardar Cambios
+
+        </button>
+
+    </form>
+
+</div>
+
+<!-- MODAL -->
+
+<div id="modalConfirmacion"
+     class="modal">
+
+    <div class="modal-content">
+
+        <h2 id="tituloModal">
+            Confirmación
+        </h2>
+
+        <p id="mensajeModal"></p>
+
+        <div class="modal-buttons">
+
+            <button type="button"
+                    class="btn-cancel"
+                    onclick="cerrarModal()">
+
+                Cancelar
+
+            </button>
+
+            <button type="button"
+                    class="btn-confirm"
+                    id="btnConfirmar">
+
+                Confirmar
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</script>
+
+</body>
+</html>

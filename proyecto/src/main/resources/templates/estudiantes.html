@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Estudiantes | Cobros INO</title>
+
+    <link rel="stylesheet" th:href="@{/estudiantes.css}">
+    <script th:src="@{/atajos.js}"></script>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <header class="encabezado">
+
+        <div>
+            <h1>👨‍🎓 Estudiantes</h1>
+            <p>Gestión de estudiantes del sistema de cobros</p>
+        </div>
+
+        <a th:href="@{/usuarios/dashboard}" class="btn-volver">
+            🏠 Dashboard
+        </a>
+
+    </header>
+
+    <div th:if="${mensaje}" style="background:#EAF9EF; color:#1E7E34; padding:12px 16px; border-radius:8px; margin-bottom:16px; font-weight:600;" th:text="${mensaje}"></div>
+    <div th:if="${error}" style="background:#FDEAEA; color:#C0392B; padding:12px 16px; border-radius:8px; margin-bottom:16px; font-weight:600;" th:text="${error}"></div>
+
+    <section class="acciones">
+
+        <form th:action="@{/estudiantes/buscar}" method="get">
+
+            <input
+                type="text"
+                name="texto"
+                placeholder="Buscar por nombre o apellido..."
+                th:value="${busqueda}"
+            >
+
+            <button type="submit">
+                🔎 Buscar
+            </button>
+
+        </form>
+
+        <a th:href="@{/estudiantes/nuevo}" class="btn-nuevo">
+            ➕ Nuevo estudiante
+        </a>
+
+    </section>
+
+    <section class="tabla-contenedor">
+
+        <table>
+
+            <thead>
+
+            <tr>
+                <th>ID</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Grado</th>
+                <th>Sección</th>
+                <th>Especialidad</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            <tr th:each="estudiante : ${listaEstudiantes}">
+
+                <td th:text="${estudiante.id_estudiante}">
+                    1
+                </td>
+
+                <td th:text="${estudiante.nombres}">
+                    Nombres
+                </td>
+
+                <td th:text="${estudiante.apellidos}">
+                    Apellidos
+                </td>
+
+                <td th:text="${estudiante.grado}">
+                    Grado
+                </td>
+
+                <td th:text="${estudiante.seccion}">
+                    Sección
+                </td>
+
+                <td th:text="${estudiante.id_especialidad}">
+                    Especialidad
+                </td>
+
+                <td>
+
+                    <span
+                        th:if="${estudiante.activo}"
+                        class="estado activo">
+                        ACTIVO
+                    </span>
+
+                    <span
+                        th:unless="${estudiante.activo}"
+                        class="estado inactivo">
+                        INACTIVO
+                    </span>
+
+                </td>
+
+                                <td class="acciones-tabla">
+                    <a th:href="@{/estudiantes/editar/{id}(id=${estudiante.id_estudiante})}" class="editar">✏️</a>
+                    <a th:href="@{/estudiantes/estado/{id}(id=${estudiante.id_estudiante})}" class="estado-btn">🔄</a>
+                    <a th:href="@{/estudiantes/eliminar/{id}(id=${estudiante.id_estudiante})}" class="eliminar" onclick="return confirm('¿Seguro que deseas eliminar este estudiante?');">🗑️</a>
+                
+
+                </td>
+
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(listaEstudiantes)}">
+
+                <td colspan="8" class="sin-datos">
+                    No hay estudiantes registrados.
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+</div>
+
+</body>
+</html>
